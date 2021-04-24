@@ -1,0 +1,33 @@
+.Dd 2020-10-26
+.Dt CSLT 1
+.Os HitchHiker linux
+.Sh NAME
+.Nm cslt
+.Nd generate a sine look up table array
+.Sh SYNOPSYS
+.Nm
+.Op Fl hx
+.Op Fl d Ar depth
+.Op Fl l Ar length
+.Op Fl o Ar offset
+.Sh DESCRIPTION
+.Nm
+generates an array of integers comprising a sine lookup table, useful in
+DSP applications.
+.Bl -tag -width Ds
+.It Fl h
+print a terse usage statement and exit.
+.It Fl d
+depth of the values (default 16)
+.It Fl l
+number of elements in the array (default 16)
+.It Fl o
+offset the array positive by this amount, squeezing the output into the
+maximum value described by
+.Ar depth
+.It Fl x
+print values in hex rather than integer
+.Sh EXIT STATUS
+.Ex -std cslt
+.Sh AUTHOR
+Written by the JeanG3nie.

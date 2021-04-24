@@ -1,0 +1,38 @@
+There are two complete implementations of the program included in the
+source distribution. One is coded in C and uses a simple Makefile, while
+the other is implemented in rust as an exercise in both writing rust and
+porting from one language to the other. Which to install is up to the
+user.
+
+=================
+  The C version
+=================
+Quick install:
+	make
+	make install
+This installs the program as /usr/local/bin/cslt and manual page as
+/usr/local/share/man/man1/cslt.1
+
+For fine tuning several variables can be changed from their defaults by
+editing config.mk or by specifying them on the command line.
+
+PROGNAME - sets the name of the installed program and manual page (slut)
+PREFIX   - sets the installation prefix (/usr/local)
+BINDIR   - where to install binaries ($(PREFIX)/bin)
+MANDIR   - where to install manuals ($(PREFIX)/share/man
+
+====================
+  The Rust version
+====================
+You will need an up-to-date rust toolchain including cargo.
+Quick install:
+	cargo build --release
+	install -s target/release/rslt /usr/local/bin
+
+===================
+  The Zig version
+===================
+You will probably need the development version of the Zig toolchain.
+Quick install:
+	zig build -Drelease-safe=true
+	install -s target/release/zslt /usr/local/bin
