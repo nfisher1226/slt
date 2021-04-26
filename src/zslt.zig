@@ -44,7 +44,7 @@ const Specs = struct {
     length: f64,
     offset: f64,
     hex: bool,
-    
+
     fn print_sine(self: Specs, index: f64) !void {
         const hypotenuse = (self.depth - 1.0) / 2.0;
         const rads_per_index = (2.0 * PI) / self.length;
@@ -53,7 +53,7 @@ const Specs = struct {
         if (self.hex) {
             try stdout.print("0x{x}", .{@floatToInt(u64, entry)});
         } else {
-            try stdout.print("{d:.0}", .{entry});
+            try stdout.print("{d:.0}", .{@floatToInt(u64, entry)});
         }
         if (index < (self.length - 1.0)) {
             try stdout.print(", ", .{});
@@ -76,41 +76,43 @@ pub fn main() anyerror!void {
     if (args.flag("--help")) {
         usage(0);
     }
-    
-    var depth: f64 = 16.0;
-    if (args.option("--depth")) |d| {
-        depth = std.fmt.parseFloat(f64, d) catch |e| {
+
+    const depth: f64 = if (args.option("--depth")) |d| dblk: {
+        if (std.fmt.parseFloat(f64, d)) |num| {
+            break :dblk num;
+        } else |e| {
             try stderr.print("{s}\n", .{e});
             usage(1);
             unreachable;
-        };
-    }
-    
-    var length: f64 = 16.0;
-    if (args.option("--length")) |l| {
-        length = std.fmt.parseFloat(f64, l) catch |e| {
+        }
+    } else 16.0;
+
+    const length: f64 = if (args.option("--length")) |l| lblk: {
+        if (std.fmt.parseFloat(f64, l)) |num| {
+            break : lblk num;
+        } else |e| {
             try stderr.print("{s}\n", .{e});
             usage(1);
             unreachable;
-        };
-    }
-    
-    var offset: f64 = 0.0;
-    if (args.option("--offset")) |o| {
-        offset = std.fmt.parseFloat(f64, o) catch |e| {
+        }
+    } else 16.0;
+
+    const offset: f64 = if (args.option("--offset")) |o| oblk: {
+        if (std.fmt.parseFloat(f64, o)) |num| {
+            if (depth <= num) {
+                try stderr.print("ERROR: depth smaller than offset\n", .{});
+                usage(1);
+            }
+            break :oblk num;
+        } else |e| {
             try stderr.print("{s}\n", .{e});
             usage(1);
             unreachable;
-        };
-    }
-    
-    if (depth <= offset) {
-        try stderr.print("ERROR: depth smaller than offset", .{});
-        usage(1);
-    }
+        }
+    } else 0.0;
 
     try stdout.print("{{\n    ", .{});
-    
+
     const specs = Specs {
         .depth = depth - offset,
         .length = length,
