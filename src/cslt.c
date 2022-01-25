@@ -28,6 +28,7 @@
 #define _XOPEN_SOURCE
 
 #include <ctype.h>
+#include <errno.h>   // errno
 #include <libgen.h>
 #include <math.h>
 #include <stdio.h>
@@ -50,6 +51,23 @@ int computeSine(double index, unsigned int length, unsigned int depth) {
   return (unsigned int)round(value);
 }
 
+long parselong(char *buf) {
+  errno = 0;
+  char *endptr;
+  int num = strtol(optarg, &endptr, 10);
+  if (errno != 0) {
+        perror("Error parsing integer from input: ");
+        exit(EXIT_FAILURE);
+  } else if (num == 0 && endptr == optarg) {
+        fprintf(stderr, "Error: invalid input: %s\n", optarg);
+        exit(EXIT_FAILURE);
+  } else if (*endptr != '\0') {
+        fprintf(stderr, "Error: invalid input: %s\n", optarg);
+        exit(EXIT_FAILURE);
+  }
+  return num;
+}
+
 int main(int argc, char *argv[]) {
   unsigned int c, length = 16, depth = 16, line = 0, offset = 0, xflag = 0;
   __progname = basename(argv[0]);
@@ -61,13 +79,13 @@ int main(int argc, char *argv[]) {
       return 0;
       break;
     case 'd':
-      depth = strtol(optarg, NULL, 10);
+      depth = parselong(optarg);
       break;
     case 'l':
-      length = strtol(optarg, NULL, 10);
+      length = parselong(optarg);
       break;
     case 'o':
-      offset = strtol(optarg, NULL, 10);
+      offset = parselong(optarg);
       break;
     case 'x':
       xflag = 1;

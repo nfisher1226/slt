@@ -27,7 +27,9 @@
 
 const std = @import("std");
 const clap = @import("zig-clap");
-const PI = std.math.pi;
+const allocator = std.heap.page_allocator;
+const fmt = std.fmt;
+const math = std.math;
 const stderr = std.io.getStdErr().writer();
 const stdout = std.io.getStdOut().writer();
 
@@ -47,9 +49,9 @@ const Specs = struct {
 
     fn print_sine(self: Specs, index: f64) !void {
         const hypotenuse = (self.depth - 1.0) / 2.0;
-        const rads_per_index = (2.0 * PI) / self.length;
+        const rads_per_index = (2.0 * math.pi) / self.length;
         const rads = index * rads_per_index;
-        const entry = std.math.round((std.math.sin(rads) * hypotenuse) + hypotenuse + self.offset);
+        const entry = math.round((math.sin(rads) * hypotenuse) + hypotenuse + self.offset);
         if (self.hex) {
             try stdout.print("0x{x}", .{@floatToInt(u64, entry)});
         } else {
@@ -68,8 +70,8 @@ const Specs = struct {
 
 pub fn main() anyerror!void {
     var diag: clap.Diagnostic = undefined;
-    var args = clap.parse(clap.Help, &params, std.heap.page_allocator, &diag) catch |err| {
-        diag.report(std.io.getStdErr().writer(), err) catch {};
+    var args = clap.parse(clap.Help, &params, allocator, &diag) catch |err| {
+        diag.report(stderr, err) catch {};
         return err;
     };
     defer args.deinit();
@@ -77,9 +79,9 @@ pub fn main() anyerror!void {
         usage(0);
     }
 
-    const depth: f64 = if (args.option("--depth")) |d| dblk: {
-        if (std.fmt.parseFloat(f64, d)) |num| {
-            break :dblk num;
+    const depth: f64 = if (args.option("--depth")) |d| depth_blk: {
+        if (fmt.parseFloat(f64, d)) |num| {
+            break :depth_blk num;
         } else |e| {
             try stderr.print("{s}\n", .{e});
             usage(1);
@@ -87,9 +89,9 @@ pub fn main() anyerror!void {
         }
     } else 16.0;
 
-    const length: f64 = if (args.option("--length")) |l| lblk: {
-        if (std.fmt.parseFloat(f64, l)) |num| {
-            break : lblk num;
+    const length: f64 = if (args.option("--length")) |l| length_blk: {
+        if (fmt.parseFloat(f64, l)) |num| {
+            break :length_blk num;
         } else |e| {
             try stderr.print("{s}\n", .{e});
             usage(1);
@@ -97,13 +99,13 @@ pub fn main() anyerror!void {
         }
     } else 16.0;
 
-    const offset: f64 = if (args.option("--offset")) |o| oblk: {
-        if (std.fmt.parseFloat(f64, o)) |num| {
+    const offset: f64 = if (args.option("--offset")) |o| offset_blk: {
+        if (fmt.parseFloat(f64, o)) |num| {
             if (depth <= num) {
                 try stderr.print("ERROR: depth smaller than offset\n", .{});
                 usage(1);
             }
-            break :oblk num;
+            break :offset_blk num;
         } else |e| {
             try stderr.print("{s}\n", .{e});
             usage(1);
@@ -113,7 +115,7 @@ pub fn main() anyerror!void {
 
     try stdout.print("{{\n    ", .{});
 
-    const specs = Specs {
+    const specs = Specs{
         .depth = depth - offset,
         .length = length,
         .offset = offset,
