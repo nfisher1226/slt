@@ -16,10 +16,7 @@ pub fn build(b: *std.build.Builder) void {
     exe.setBuildMode(mode);
     exe.install();
 
-    exe.addPackage(.{
-        .name = "zig-clap",
-        .path = "zig-clap/clap.zig",
-    });
+    exe.addPackagePath("zig-clap", "zig-clap/clap.zig");
 
     const run_cmd = exe.run();
     run_cmd.step.dependOn(b.getInstallStep());

@@ -26,7 +26,7 @@
  *
  */
 
-use clap::{crate_version, App, Arg};
+use clap::{Arg, Command};
 use core::f64::consts::PI;
 use std::process;
 
@@ -60,13 +60,13 @@ impl Specs {
 }
 
 fn main() {
-    let matches = App::new("rslt")
-        .version(crate_version!())
+    let matches = Command::new("rslt")
+        .version(env!("CARGO_PKG_VERSION"))
         .author("The JeanG3nie <jeang3nie@hitchhiker-linux.org>")
         .about("Generate a Sine Look Up Table in array format")
         .arg(
             Arg::new("DEPTH")
-                .about("The depth or amplitude")
+                .help("The depth or amplitude")
                 .short('d')
                 .long("depth")
                 .default_value("16")
@@ -74,7 +74,7 @@ fn main() {
         )
         .arg(
             Arg::new("LENGTH")
-                .about("The number of entries")
+                .help("The number of entries")
                 .short('l')
                 .long("length")
                 .default_value("16")
@@ -82,7 +82,7 @@ fn main() {
         )
         .arg(
             Arg::new("OFFSET")
-                .about("Offset the amplitude from zero")
+                .help("Offset the amplitude from zero")
                 .short('o')
                 .long("offset")
                 .default_value("0")
@@ -90,7 +90,7 @@ fn main() {
         )
         .arg(
             Arg::new("HEX")
-                .about("Return results in hex format")
+                .help("Return results in hex format")
                 .short('x')
                 .long("hex"),
         )
