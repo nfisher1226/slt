@@ -60,10 +60,10 @@ impl Specs {
 }
 
 fn main() {
-    let matches = App::new("slut")
+    let matches = App::new("rslt")
         .version(crate_version!())
         .author("The JeanG3nie <jeang3nie@hitchhiker-linux.org>")
-        .about("Generates a Sine Look Up Table in array format")
+        .about("Generate a Sine Look Up Table in array format")
         .arg(
             Arg::new("DEPTH")
                 .about("The depth or amplitude")

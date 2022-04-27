@@ -26,12 +26,14 @@ line parameters are as follows:
   reaches a minimum barrier.
 
 * -x - output the values in hex instead of as integers
-## Five complete versions
+## Six complete versions
 The program was originally coded in C as it's a language that I'm fairly
 competent in. The distribution now also includes a complete rewrite in
 Rust, and another in Zig, both undertaken as learning exercises. For the sake of
 completeness, I then decided to try Python. And after that, as I've been curious
-about Nim, I ported it to that language as well. I know, I have a problem.
+about Nim, I ported it to that language as well. Now that I know this program
+inside and out, I decided to try and write in in Hare when that language was
+released as well. I know, I have a problem.
 
 All versions give identical output but have some slight differences in function.
 
@@ -44,6 +46,15 @@ included Makefile.
 make
 make install
 ```
+The Hare version functions much the same as the C version accepting only short
+form options. To build the Hare version (after installing Hare on your computer)
+invoke the compiler directly.
+
+```sh
+hare build -o hslt src/hslt.ha
+install -s hslt /usr/local/bin
+```
+
 
 The Rust version, in comparison, has builtin documentation provided by
 the excellent clap crate used for option parsing. Invoking the binary
