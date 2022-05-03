@@ -125,7 +125,8 @@ export fn main() void = {
 		printSine(idx, sp);
 		if (idx < sp.length - 1) {
 			fmt::print(", ")!;
+		} else {
+			fmt::println("\n}")!;
 		};
 	};
-	fmt::println("\n};")!;
 };

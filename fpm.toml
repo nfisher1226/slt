@@ -1,0 +1,15 @@
+name = "fslt"
+version = "0.1.0"
+license = "BeerWare"
+author = "Nathan Fisher"
+maintainer = "jeang3nie@hitchhiker-linux.org"
+copyright = "Copyright 2022, Nathan Fisher"
+[build]
+auto-executables = true
+auto-tests = true
+auto-examples = true
+[install]
+library = false
+[dependencies]
+[dependencies.M_CLI2]
+git = "https://github.com/urbanjost/M_CLI2.git"

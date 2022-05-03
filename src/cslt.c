@@ -69,7 +69,7 @@ long parselong(char *buf) {
 }
 
 int main(int argc, char *argv[]) {
-  unsigned int c, length = 16, depth = 16, line = 0, offset = 0, xflag = 0;
+  unsigned int c, length = 16, depth = 16, offset = 0, xflag = 0;
   __progname = basename(argv[0]);
 
   while ((c = getopt(argc, argv, "hd:l:o:x")) != -1)
@@ -109,9 +109,8 @@ int main(int argc, char *argv[]) {
   printf("{\n    ");
 
   while (index < length) {
-    if (line == 12) {
+    if ((int)index % 12 == 0) {
       printf("\n    ");
-      line = 0;
     }
     unsigned int entry = computeSine(index, length, depth) + offset;
     if (xflag)
@@ -124,7 +123,6 @@ int main(int argc, char *argv[]) {
     else
       puts("\n};");
     index++;
-    line++;
   }
   return 0;
 }

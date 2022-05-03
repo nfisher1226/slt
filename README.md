@@ -26,7 +26,7 @@ line parameters are as follows:
   reaches a minimum barrier.
 
 * -x - output the values in hex instead of as integers
-## Six complete versions
+## Seven complete versions
 The program was originally coded in C as it's a language that I'm fairly
 competent in. The distribution now also includes a complete rewrite in
 Rust, and another in Zig, both undertaken as learning exercises. For the sake of
@@ -119,7 +119,25 @@ party libraries that can be used instead of nim's getopt, or one could try
 calling into C. But I would think it preferable that if a standard library
 includes a command line parser that parser would follow expected behaviors.
 
-The four binaries are roughly equivalent in speed, but the rust version
+The nim version requires the nim compiler to build.
+```sh
+nim compile src/nslt
+```
+
+The fortran implementation is a relatively recent addition as it's a language
+which I have always been curious about but it is so different as to require some
+effort to pick up. I have to say, I can see fortran being useful as it's syntax
+is quite a bit simpler than it seems at first blush, and the language is quite
+complete already in what it gives you. It is also much more active than I expected
+for such an old language, and even has a Cargo inspired package manager named fpm.
+To check it out, install the Gnu gfortran compiler and the fpm package manager
+(available on GitHub).
+
+```sh
+fpm build
+```
+
+The six binaries are roughly equivalent in speed, but the rust version
 incurs a significant size penaly due to the static linking of Rust's
 libstd and the clap crate. The resulting binary is 764K versus the tiny
 16K produced with the dynamically linked C binary. This is a fundamental
