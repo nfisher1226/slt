@@ -1,3 +1,29 @@
+!
+! ---------------------------------------------------------------------
+!           "THE BEER-WARE LICENSE" (Revision 42):
+! <jeang3nie@HitchHiker-Linux.org> wrote this file. As long as you
+! retain this notice you can do whatever you want with this stuff. If
+! we meet some day, and you think this stuff is worth it, you can buy
+! me a beer in return.
+! ---------------------------------------------------------------------
+!            ______   _______  _          _________
+!           (  __  \ (  ___  )( (    /|( )\__   __/
+!           | (  \  )| (   ) ||  \  ( ||/    ) (
+!           | |   ) || |   | ||   \ | |      | |
+!           | |   | || |   | || (\ \) |      | |
+!           | |   ) || |   | || | \   |      | |
+!           | (__/  )| (___) || )  \  |      | |
+!           (______/ (_______)|/    )_)      )_(
+!
+!         _______  _______  _       _________ _______
+!        (  ____ )(  ___  )( \    /|\__   __/(  ____ \
+!        | (    )|| (   ) ||  \  ( |   ) (   | (    |/
+!        | (____)|| (___) ||   \ | |   | |   | |
+!        |  _____)|  ___  || (\ \) |   | |   | |
+!        | (      | (   ) || | \   |   | |   | |
+!        | )      | )   ( || )  \  |___) (___| (____|\
+!        |/       |/     \||/    \_)\_______/(_______/
+!
 module fslt
   implicit none
   private
@@ -27,8 +53,10 @@ contains
           write (*,'("0x",z1,", ")',advance="no") val
         else if (val < 256) then
           write (*,'("0x",z2,", ")',advance="no") val
-        else
+        else if (val < 4096) then
           write (*,'("0x",z3,", ")',advance="no") val
+        else
+          write (*,'("0x",z4,", ")',advance="no") val
         end if
       else
         if (val < 10) then
@@ -47,8 +75,10 @@ contains
           write (*,'("0x",z1)') val
         else if (val < 256) then
           write (*,'("0x",z2)') val
-        else
+        else if (val < 4096) then
           write (*,'("0x",z3)') val
+        else
+          write (*,'("0x",z4)') val
         end if
       else
         if (val < 10) then
