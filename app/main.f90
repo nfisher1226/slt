@@ -23,7 +23,7 @@
 !        | (      | (   ) || | \   |   | |   | |
 !        | )      | )   ( || )  \  |___) (___| (____|\
 !        |/       |/     \||/    \_)\_______/(_______/
-!
+
 program main
     use M_CLI2, only : set_args, get_args
     use fslt, only: print_sin
@@ -34,11 +34,10 @@ program main
     call set_args('--depth:d 16 --length:l 16 --offset:o 0 --hex:x F')
     call get_args('d',depth, 'l',length, 'o',offset, 'x',hex)
 
-    write (*,'(a1)',advance="no") '{'
+    write (*,'(a1,/,a4)',advance="no") '{', '    '
     idx = 0
     do while (idx < length)
         call print_sin(depth,length,offset,idx,hex)
         idx = idx + 1
     end do
-    write (*,'(a2)') '};'
 end program main

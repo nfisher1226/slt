@@ -23,7 +23,7 @@
 !        | (      | (   ) || | \   |   | |   | |
 !        | )      | )   ( || )  \  |___) (___| (____|\
 !        |/       |/     \||/    \_)\_______/(_______/
-!
+
 module fslt
     implicit none
     private
@@ -43,10 +43,6 @@ contains
         rads = real(idx) * rads_per_index
         val = nint((sin(rads) * hypotenuse) + hypotenuse + offset)
 
-        if (mod(idx, 12) == 0) then
-            print *
-            write (*,'(a4)',advance="no") '    '
-        end if
         if (hex) then
             if (val < 16) then
                 write (*,'("0x",z1)',advance="no") val
@@ -70,8 +66,11 @@ contains
         end if
         if (idx < length - 1) then
             write (*,'(a2)',advance="no") ', '
+            if (mod(idx + 1, 12) == 0) then
+                write (*,'(/,a4)',advance="no")  '    '
+            end if
         else
-            print *
+            write (*,'(/,a2)') '};'
         end if
     end subroutine print_sin
 end module fslt

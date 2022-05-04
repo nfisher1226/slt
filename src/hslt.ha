@@ -42,8 +42,7 @@ fn printSine(idx: uint, sp: specs) void = {
 	let hypotenuse: f64 = (sp.depth: f64 - 1.0) / 2.0;
 	let radsPerIndex: f64 = (2.0 * math::PI) / sp.length: f64;
 	let rads: f64 = idx: f64 * radsPerIndex;
-	let val: f64 = (math::sinf64(rads) * hypotenuse) + hypotenuse;
-	let val: uint = math::roundf64(val): uint + sp.offs;
+	let val: uint = math::roundf64((math::sinf64(rads) * hypotenuse) + hypotenuse): uint + sp.offs;
 	if (sp.hex == 0) {
 		fmt::printf("{}", val)!;
 	} else {
@@ -115,7 +114,7 @@ export fn main() void = {
 		sp.depth -= sp.offs;
 	};
 
-	fmt::print("{\n    ")!;
+	fmt::print("{")!;
 
 	let idx = 0u;
 	for (idx < sp.length; idx += 1) {
