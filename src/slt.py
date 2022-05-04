@@ -46,7 +46,7 @@ for i in range(int(length)):
     if (flags.hex):
         sys.stdout.write(format(hex(int(entry))))
     else:
-        sys.stdout.write(format(entry))
+        sys.stdout.write(format(int(entry)))
     # Don't print the trailing comma on the final entry
     if (i < int(length) - 1):
         sys.stdout.write(", ")
