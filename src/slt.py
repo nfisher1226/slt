@@ -39,14 +39,14 @@ depth = depth - offset
 
 # Iterate through the entire range
 for i in range(int(length)):
-    entry = compute_sine(i) + offset
+    entry = int(compute_sine(i) + offset)
     # Line break every 12 entries
     if (i % 12 == 0):
         sys.stdout.write("\n    ")
     if (flags.hex):
-        sys.stdout.write(format(hex(int(entry))))
+        sys.stdout.write(format(hex(entry)))
     else:
-        sys.stdout.write(format(int(entry)))
+        sys.stdout.write(format(entry))
     # Don't print the trailing comma on the final entry
     if (i < int(length) - 1):
         sys.stdout.write(", ")
