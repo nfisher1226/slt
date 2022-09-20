@@ -27,17 +27,20 @@
 
 const std = @import("std");
 const clap = @import("zig-clap");
-const PI = std.math.pi;
+const allocator = std.heap.page_allocator;
+const fmt = std.fmt;
+const math = std.math;
 const stderr = std.io.getStdErr().writer();
 const stdout = std.io.getStdOut().writer();
 
-const params = comptime [_]clap.Param(clap.Help){
-    clap.parseParam("-h, --help             Display this help and exit.") catch unreachable,
-    clap.parseParam("-d, --depth <NUM>      The depth or amplitude.") catch unreachable,
-    clap.parseParam("-l, --length <NUM>     The number of entries.") catch unreachable,
-    clap.parseParam("-o, --offset <NUM>     Offset the amplitude from zero.") catch unreachable,
-    clap.parseParam("-x, --hex              Return results in hex format.") catch unreachable,
-};
+const params = clap.parseParamsComptime(
+    \\-h, --help             Display this help and exit.
+    \\-d, --depth  <usize>   The depth or amplitude.
+    \\-l, --length <usize>   The number of entries.
+    \\-o, --offset <usize>   Offset the amplitude from zero.
+    \\-x, --hex              Return results in hex format.
+    \\
+);
 
 const Specs = struct {
     depth: f64,
@@ -47,9 +50,9 @@ const Specs = struct {
 
     fn print_sine(self: Specs, index: f64) !void {
         const hypotenuse = (self.depth - 1.0) / 2.0;
-        const rads_per_index = (2.0 * PI) / self.length;
+        const rads_per_index = (2.0 * math.pi) / self.length;
         const rads = index * rads_per_index;
-        const entry = std.math.round((std.math.sin(rads) * hypotenuse) + hypotenuse + self.offset);
+        const entry = math.round((math.sin(rads) * hypotenuse) + hypotenuse + self.offset);
         if (self.hex) {
             try stdout.print("0x{x}", .{@floatToInt(u64, entry)});
         } else {
@@ -67,57 +70,33 @@ const Specs = struct {
 };
 
 pub fn main() anyerror!void {
-    var diag: clap.Diagnostic = undefined;
-    var args = clap.parse(clap.Help, &params, std.heap.page_allocator, &diag) catch |err| {
-        diag.report(std.io.getStdErr().writer(), err) catch {};
+    var diag = clap.Diagnostic{};
+    var res = clap.parse(clap.Help, &params, clap.parsers.default, .{
+        .diagnostic = &diag
+    }) catch |err| {
+        diag.report(stderr, err) catch {};
         return err;
     };
-    defer args.deinit();
-    if (args.flag("--help")) {
+    defer res.deinit();
+    if (res.args.help) {
         usage(0);
     }
 
-    const depth: f64 = if (args.option("--depth")) |d| dblk: {
-        if (std.fmt.parseFloat(f64, d)) |num| {
-            break :dblk num;
-        } else |e| {
-            try stderr.print("{s}\n", .{e});
-            usage(1);
-            unreachable;
-        }
-    } else 16.0;
-
-    const length: f64 = if (args.option("--length")) |l| lblk: {
-        if (std.fmt.parseFloat(f64, l)) |num| {
-            break : lblk num;
-        } else |e| {
-            try stderr.print("{s}\n", .{e});
-            usage(1);
-            unreachable;
-        }
-    } else 16.0;
-
-    const offset: f64 = if (args.option("--offset")) |o| oblk: {
-        if (std.fmt.parseFloat(f64, o)) |num| {
-            if (depth <= num) {
-                try stderr.print("ERROR: depth smaller than offset\n", .{});
-                usage(1);
-            }
-            break :oblk num;
-        } else |e| {
-            try stderr.print("{s}\n", .{e});
-            usage(1);
-            unreachable;
-        }
-    } else 0.0;
+    const depth: f64 = if (res.args.depth) |d| @intToFloat(f64, d) else 16.0;
+    const length: f64 = if (res.args.length) |l| @intToFloat(f64, l) else 16.0;
+    const offset: f64 = if (res.args.offset) |o| @intToFloat(f64, o) else 0.0;
+    if (depth <= offset) {
+        try stderr.print("ERROR: depth smaller than offset\n", .{});
+        usage(1);
+    }
 
     try stdout.print("{{\n    ", .{});
 
-    const specs = Specs {
+    const specs = Specs{
         .depth = depth - offset,
         .length = length,
         .offset = offset,
-        .hex = (args.flag("--hex")),
+        .hex = (res.args.hex),
     };
     var i: f64 = 0.0;
     while (i < length) {
@@ -128,8 +107,8 @@ pub fn main() anyerror!void {
 
 fn usage(status: u8) void {
     stderr.print("Usage: {s} ", .{"zslt"}) catch unreachable;
-    clap.usage(stderr, &params) catch unreachable;
+    clap.usage(stderr, clap.Help, &params) catch unreachable;
     stderr.print("\nFlags: \n", .{}) catch unreachable;
-    clap.help(stderr, &params) catch unreachable;
+    clap.help(stderr, clap.Help, &params, .{}) catch unreachable;
     std.process.exit(status);
 }
