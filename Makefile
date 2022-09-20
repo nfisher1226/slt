@@ -21,19 +21,22 @@ $(PROGNAME): cslt.c
 $(CXXPROG): cppslt.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
-install: $(BINDIR)/$(PROGNAME) $(BINDIR)/$(CXXPROG) $(MANDIR)/man1/$(PROGNAME).1
+install: $(BINDIR)/$(PROGNAME) $(BINDIR)/$(CXXPROG) $(MANDIR)/man1/$(PROGNAME).1 $(MANDIR)/man1/$(CXXPROG).1
 
-install-strip: $(BINDIR)/$(PROGNAME) $(MANDIR)/man1/$(PROGNAME).1
+install-strip: $(BINDIR)/$(PROGNAME) $(BINDIR)/$(CXXPROG) $(MANDIR)/man1/$(PROGNAME).1 $(MANDIR)/man1/$(CXXPROG).1
 	strip -s $<
 
 $(BINDIR)/$(PROGNAME): $(PROGNAME) | $(BINDIR)
 	install -m0755 $< $@
 
-$(BINDIR)/$(CXXPROG): $(PROGNAME) | $(BINDIR)
+$(BINDIR)/$(CXXPROG): $(CXXPROG) | $(BINDIR)
 	install -m0755 $< $@
 
 $(MANDIR)/man1/$(PROGNAME).1: cslt.1 | $(MANDIR)/man1
 	install -m0644 $< $@
+
+$(MANDIR)/man1/$(CXXPROG).1: cslt.1 | $(MANDIR)/man1
+	sed -e 's/cslt/cppslt/g' -e 's/CSLT/CPPSLT/g' $< > $@
 
 $(INSTALLDIRS):
 	install -d $@
