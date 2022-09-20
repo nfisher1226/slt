@@ -26,14 +26,15 @@ line parameters are as follows:
   reaches a minimum barrier.
 
 * -x - output the values in hex instead of as integers
-## Seven complete versions
+## Eight complete versions
 The program was originally coded in C as it's a language that I'm fairly
 competent in. The distribution now also includes a complete rewrite in
 Rust, and another in Zig, both undertaken as learning exercises. For the sake of
 completeness, I then decided to try Python. And after that, as I've been curious
 about Nim, I ported it to that language as well. Now that I know this program
 inside and out, I decided to try and write in in Hare when that language was
-released as well. I know, I have a problem.
+released as well. And then in C++, because I should learn it. I know, I have
+a problem.
 
 All versions give identical output but have some slight differences in function.
 
@@ -41,6 +42,8 @@ The C version gives an extremely terse usage statement when invoked with
 the -h flag and only accepts short form options. The included Unix man
 page is the primary source of documentation. To build the C version just use the
 included Makefile.
+
+> Note: This also builds the c++ version
 
 ```sh
 make
