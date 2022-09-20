@@ -1,0 +1,5 @@
+[
+  { "directory": "./src",
+    "arguments": ["clang++", "-std=c++17", "-o", "cppslt", "cppslt.cpp"],
+    "file": "cppslt.cpp" },
+]
